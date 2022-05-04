@@ -2,7 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:pfe/screens/home_page.dart';
+import 'package:pfe/ui/patient/patient_home_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {

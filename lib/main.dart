@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-
-import 'package:pfe/screens/start_page.dart';
+import 'package:pfe/ui/admin/admin_home_page.dart';
+import 'package:pfe/ui/hospital/hospital_home_page.dart';
+import 'package:pfe/ui/patient/patient_home_page.dart';
+import 'package:pfe/ui/shared/login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,10 +14,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: const StartPage());
+      initialRoute: '/',
+      routes: {
+        '/': (context) => LoginPage(),
+        '/patient': (context) => PatientHomePage(),
+        '/hospital': (context) => HospitalHomePage(),
+        '/admin': (context) => AdminHomePage(),
+      },
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+    );
   }
 }

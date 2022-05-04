@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pfe/screens/start_page.dart';
 import 'package:pfe/services/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,6 +11,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _is_invalid = false;
 
+  TextEditingController username = TextEditingController();
+  TextEditingController password = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +39,7 @@ class _LoginPageState extends State<LoginPage> {
             const Padding(
               padding: EdgeInsets.all(12.0),
               child: TextField(
+                controller: username,
                 obscureText: false,
                 decoration: InputDecoration(
                   labelText: 'Username',
@@ -47,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
             const Padding(
               padding: EdgeInsets.all(12.0),
               child: TextField(
+                controller: password,
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Password',
@@ -56,22 +59,7 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: ElevatedButton(
-                onPressed: () async {
-                  if (await AuthService().login() == true) {
-                    print('object');
-                    Navigator.pop(context);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const StartPage()));
-                  } else {
-                    print('didint');
-
-                    setState(() {
-                      _is_invalid = true;
-                    });
-                  }
-                },
+                onPressed: () {},
                 child: const Padding(
                   padding:
                       EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
