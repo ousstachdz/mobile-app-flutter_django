@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pfe/blocs/auth_bloc.dart';
+import 'package:pfe/blocs/auth_event.dart';
+import 'package:pfe/blocs/auth_state.dart';
 import 'package:pfe/services/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
@@ -9,75 +13,113 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool _is_invalid = false;
-
   TextEditingController username = TextEditingController();
   TextEditingController password = TextEditingController();
+
+  late AuthBloc authBloc;
+  @override
+  void initState() {
+    authBloc = BlocProvider.of<AuthBloc>(context);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final message_error =
+        BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+      if (state is LoginErrorState) {
+        return Container(
+            decoration: BoxDecoration(color: Colors.red[100]),
+            padding: const EdgeInsets.all(8.0),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                state.message,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red[900],
+                ),
+              ),
+            ));
+      } else if (state is LoginLoadingState) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      } else {
+        return Container();
+      }
+    });
     return Scaffold(
-        body: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          child: _is_invalid
-              ? const Icon(
-                  Icons.error_rounded,
-                  color: Colors.red,
-                  size: 80.0,
-                )
-              : const Icon(
-                  Icons.account_circle,
-                  color: Colors.blue,
-                  size: 80.0,
-                ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 40.0),
-          child: Column(children: [
-            const Padding(
-              padding: EdgeInsets.all(12.0),
-              child: TextField(
-                controller: username,
-                obscureText: false,
-                decoration: InputDecoration(
-                  labelText: 'Username',
-                ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(12.0),
-              child: TextField(
-                controller: password,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                ),
-              ),
+      body: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) => {
+          if (state is PatientSuccessLoginState)
+            {Navigator.pushNamed(context, '/patient')}
+          else if (state is AdminSuccessLoginState)
+            {Navigator.pushNamed(context, '/admin')}
+          else if (state is HospitalSuccessLoginState)
+            {Navigator.pushNamed(context, '/hospital')}
+        },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.account_circle_rounded,
+              color: Colors.blue,
+              size: 80.0,
             ),
             Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: ElevatedButton(
-                onPressed: () {},
-                child: const Padding(
-                  padding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  child: Text(
-                    "Login",
-                    style: TextStyle(fontSize: 20.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 40.0),
+              child: Column(children: [
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: TextField(
+                    controller: username,
+                    obscureText: false,
+                    decoration: const InputDecoration(
+                      labelText: 'Username',
+                    ),
                   ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: TextField(
+                    controller: password,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                    ),
                   ),
                 ),
-              ),
-            )
-          ]),
+                message_error,
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      authBloc.add(LoginSubmit(
+                          username: username.text, password: password.text));
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 20.0),
+                      child: Text(
+                        "Login",
+                        style: TextStyle(fontSize: 20.0),
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                    ),
+                  ),
+                )
+              ]),
+            ),
+          ],
         ),
-      ],
-    ));
+      ),
+    );
   }
 }
