@@ -37,6 +37,7 @@ dependencies:
   flutter_bloc: ^7.3.3
   equatable: ^2.0.0
   shared_preferences: ^2.0.13
+  jwt_decode: ^0.3.1
 
 dev_dependencies:
   flutter_test:

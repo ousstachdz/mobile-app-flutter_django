@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pfe/blocs/auth_bloc.dart';
 import 'package:pfe/blocs/auth_event.dart';
 import 'package:pfe/blocs/auth_state.dart';
-import 'package:pfe/services/auth_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -16,10 +16,20 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController username = TextEditingController();
   TextEditingController password = TextEditingController();
 
+  IsLogin() async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    final String? token = sharedPreferences.getString('access');
+    print(token);
+    if (token != null) {
+      Navigator.pushReplacementNamed(context, '/patient');
+    }
+  }
+
   late AuthBloc authBloc;
   @override
   void initState() {
     authBloc = BlocProvider.of<AuthBloc>(context);
+    IsLogin();
     super.initState();
   }
 
@@ -53,11 +63,11 @@ class _LoginPageState extends State<LoginPage> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) => {
           if (state is PatientSuccessLoginState)
-            {Navigator.pushNamed(context, '/patient')}
+            {Navigator.pushReplacementNamed(context, '/patient')}
           else if (state is AdminSuccessLoginState)
-            {Navigator.pushNamed(context, '/admin')}
+            {Navigator.pushReplacementNamed(context, '/admin')}
           else if (state is HospitalSuccessLoginState)
-            {Navigator.pushNamed(context, '/hospital')}
+            {Navigator.pushReplacementNamed(context, '/hospital')}
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

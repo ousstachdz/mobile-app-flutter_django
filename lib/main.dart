@@ -15,6 +15,7 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -23,12 +24,13 @@ class MyApp extends StatelessWidget {
             create: (context) => AuthBloc(LoginInitState(), AuthRepository()))
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         initialRoute: '/',
         routes: {
-          '/': (context) => LoginPage(),
-          '/patient': (context) => PatientHomePage(),
-          '/hospital': (context) => HospitalHomePage(),
-          '/admin': (context) => AdminHomePage(),
+          '/': (context) => const LoginPage(),
+          '/patient': (context) => const PatientHomePage(),
+          '/hospital': (context) => const HospitalHomePage(),
+          '/admin': (context) => const AdminHomePage(),
         },
         title: 'Flutter Demo',
         theme: ThemeData(
